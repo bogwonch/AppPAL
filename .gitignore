@@ -37,3 +37,4 @@ proguard/
 *Lexer.java
 *Listener.java
 *Parser.java
+*Visitor.java
