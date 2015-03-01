@@ -1,13 +1,13 @@
 grammar AppPAL;
 
 VARIABLE: UPPER ALNUM*;
-var: VARIABLE;
+variable: VARIABLE;
 
 CONSTANT: '"' ~["]+ '"';
-const: CONSTANT;
+constant: CONSTANT;
 
-e: var
- | const
+e: variable
+ | constant
  ;
 
 ZERO: '0';
