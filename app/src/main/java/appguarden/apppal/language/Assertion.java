@@ -15,6 +15,6 @@ public class Assertion {
 
     public String toString()
     {
-        return this.speaker + " says " + this.says;
+        return this.speaker + " says " + this.says + ".";
     }
 }

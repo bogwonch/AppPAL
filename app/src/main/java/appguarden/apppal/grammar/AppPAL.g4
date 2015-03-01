@@ -1,41 +1,30 @@
 grammar AppPAL;
 
-VARIABLE: UPPER ALNUM*;
-variable: VARIABLE;
-
+VARIABLE: UPPER TOKENCHAR*;
 CONSTANT: '"' ~["]+ '"';
-constant: CONSTANT;
-
-e: variable
- | constant
+e: VARIABLE #variable
+ | CONSTANT #constant
  ;
 
 ZERO: '0';
 INF: 'inf';
-d: ZERO
- | INF
+d: ZERO #zero
+ | INF  #inf
  ;
 
-PREDICATE_NAME: LOWER ALNUM*;
-predicate: PREDICATE_NAME ('(' e (',' e)* ')')?;
-can_say: 'can-say' d fact;
-can_act_as: 'can-act-as' e;
-
-vp: predicate
-  | can_say
-  | can_act_as
+PREDICATE_NAME: LOWER TOKENCHAR*;
+vp: PREDICATE_NAME ('(' e (',' e)* ')')? #predicate
+  | 'can-say' d fact                     #canSay
+  | 'can-act-as' e                       #canActAs
   ;
 
 fact: e vp;
 
-antecedent: 'if' (fact (',' fact)* );
-constraint: 'where' c;
-claim: fact antecedent? constraint?;
+claim: fact ('if' (fact (',' fact)* ))? ('where' c)?;
 
 assertion: e 'says' claim '.';
 
 ac: assertion+;
-
 
 c: 'true';
 
@@ -48,4 +37,4 @@ fragment
 UPPER: [A-Z];
 
 fragment
-ALNUM: [a-zA-Z0-9];
+TOKENCHAR: [a-zA-Z0-9-];
