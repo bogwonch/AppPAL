@@ -69,8 +69,7 @@ public class AC
   public AC(String str) throws IOException
   { this(new ByteArrayInputStream(str.getBytes("UTF-8"))); }
 
-  public AC(InputStream in) throws IOException
-  { this(AC.parse(in)); }
+  public AC(InputStream in) throws IOException { this(AC.parse(in)); }
 
   public AC(List<Assertion> as)
   {

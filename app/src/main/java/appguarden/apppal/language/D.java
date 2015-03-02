@@ -8,6 +8,20 @@ public enum D
 {
   ZERO, INF;
 
+  public boolean isAtLeast(D d)
+  {
+    switch (this)
+    {
+      case ZERO:
+        return d.equals(ZERO);
+      case INF:
+        return true;
+
+      default:
+        return false; // Unreachable
+    }
+  }
+
   @Override
   public String toString()
   {
