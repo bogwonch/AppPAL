@@ -38,3 +38,6 @@ proguard/
 *Listener.java
 *Parser.java
 *Visitor.java
+
+# Linting setup
+*.iml
