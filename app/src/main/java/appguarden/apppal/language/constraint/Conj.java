@@ -2,6 +2,7 @@ package appguarden.apppal.language.constraint;
 
 import java.util.Set;
 
+import appguarden.apppal.language.Constant;
 import appguarden.apppal.language.E;
 import appguarden.apppal.language.Variable;
 
@@ -25,5 +26,11 @@ public class Conj extends Constraint
     Set<Variable> vars = this.lhs.vars();
     vars.addAll(this.rhs.vars());
     return vars;
+  }
+  public Set<Constant> consts()
+  {
+    Set<Constant> consts = this.lhs.consts();
+    consts.addAll(this.rhs.consts());
+    return consts;
   }
 }

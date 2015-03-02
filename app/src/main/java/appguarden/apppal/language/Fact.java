@@ -1,15 +1,15 @@
 package appguarden.apppal.language;
 
 
-import android.util.Log;
-
 import java.util.Set;
+
+import appguarden.apppal.interfaces.EntityHolding;
 
 /**
  * AppPAL fact
  * E VP
  */
-public class Fact
+public class Fact implements EntityHolding
 {
   public final E subject;
   public final VP object;
@@ -39,5 +39,12 @@ public class Fact
     Set<Variable> vars = this.subject.vars();
     vars.addAll(this.object.vars());
     return vars;
+  }
+
+  public Set<Constant> consts()
+  {
+    Set<Constant> consts = this.subject.consts();
+    consts.addAll(this.object.consts());
+    return consts;
   }
 }

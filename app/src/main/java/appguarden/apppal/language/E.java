@@ -1,16 +1,25 @@
 package appguarden.apppal.language;
 
-import android.util.Log;
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
+import appguarden.apppal.grammar.AppPALEmitter;
+import appguarden.apppal.grammar.AppPALLexer;
+import appguarden.apppal.grammar.AppPALParser;
 import appguarden.apppal.language.constraint.CE;
+import appguarden.apppal.interfaces.EntityHolding;
 
 /**
  * AppPAL entity
  */
-public abstract class E extends CE
+public abstract class E extends CE implements EntityHolding
 {
   public final String name;
   public final EKind kind;
@@ -28,6 +37,14 @@ public abstract class E extends CE
     Set<Variable> ans = new HashSet<>();
     if (this.kind == EKind.VARIABLE)
       ans.add((Variable) this);
+    return ans;
+  }
+
+  public Set<Constant> consts()
+  {
+    Set<Constant> ans = new HashSet<>();
+    if (this.kind == EKind.CONSTANT)
+      ans.add((Constant) this);
     return ans;
   }
 
@@ -71,5 +88,21 @@ public abstract class E extends CE
   {
     if (this.kind == EKind.CONSTANT) return true;
     else return (a.says.consequent.vars().contains(this) && a.says.antecedentVars().contains(this));
+  }
+
+  /** Create a Constant by parsing a string
+   * @param str the Constant to parse
+   * @returns the parsed Constant
+   */
+  public static E parse(String str) throws IOException
+  {
+    InputStream in = new ByteArrayInputStream(str.getBytes("UTF-8"));
+    ANTLRInputStream input = new ANTLRInputStream(in);
+    AppPALLexer lexer = new AppPALLexer(input);
+    CommonTokenStream tokens = new CommonTokenStream(lexer);
+    AppPALParser parser = new AppPALParser(tokens);
+    ParseTree tree = parser.e();
+    AppPALEmitter emitter = new AppPALEmitter();
+    return (E) emitter.visit(tree);
   }
 }

@@ -2,6 +2,7 @@ package appguarden.apppal.language.constraint;
 
 import java.util.Set;
 
+import appguarden.apppal.language.Constant;
 import appguarden.apppal.language.E;
 import appguarden.apppal.language.Variable;
 
@@ -15,4 +16,6 @@ public class Negation extends Constraint
   public Negation(Constraint c) { this.value = c; }
   public String toString() { return "! "+this.value; }
   public Set<Variable> vars() { return this.value.vars(); }
+  public Set<Constant> consts() { return this.value.consts(); }
+
 }

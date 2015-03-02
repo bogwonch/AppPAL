@@ -3,11 +3,13 @@ package appguarden.apppal.language;
 
 import java.util.Set;
 
+import appguarden.apppal.interfaces.EntityHolding;
+
 /**
  * SecPAL can-act-as statement
  * can-act-as E
  */
-public class CanActAs extends VP
+public class CanActAs extends VP implements EntityHolding
 {
   public final E renaming;
 
@@ -25,4 +27,5 @@ public class CanActAs extends VP
   {
     return renaming.vars();
   }
+  public Set<Constant> consts() { return renaming.consts(); }
 }

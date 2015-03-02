@@ -1,7 +1,5 @@
 package appguarden.apppal.language;
 
-import android.util.Log;
-
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -9,17 +7,18 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringBufferInputStream;
 import java.util.Set;
 
 import appguarden.apppal.grammar.AppPALEmitter;
 import appguarden.apppal.grammar.AppPALLexer;
 import appguarden.apppal.grammar.AppPALParser;
+import appguarden.apppal.interfaces.EntityHolding;
+import appguarden.apppal.interfaces.Parsable;
 
 /**
  * SecPAL Assertion
  */
-public class Assertion
+public class Assertion implements EntityHolding, Parsable
 {
   public final E speaker;
   public final Claim says;
@@ -28,6 +27,20 @@ public class Assertion
   {
     this.speaker = speaker;
     this.says = says;
+  }
+
+  public Set<Variable> vars()
+  {
+    Set<Variable> vars = this.speaker.vars();
+    vars.addAll(this.says.vars());
+    return vars;
+  }
+
+  public Set<Constant> consts()
+  {
+    Set<Constant> consts = this.speaker.consts();
+    consts.addAll(this.says.consts());
+    return consts;
   }
 
   /** Create an assertion by parsing a string

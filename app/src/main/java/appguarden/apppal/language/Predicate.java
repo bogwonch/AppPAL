@@ -6,11 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import appguarden.apppal.interfaces.EntityHolding;
+
 /**
  * AppPAL predicate
  * predicate (E+)
  */
-public class Predicate extends VP
+public class Predicate extends VP implements EntityHolding
 {
   public final String name;
   public final List<E> args;
@@ -60,5 +62,14 @@ public class Predicate extends VP
       for(E arg : this.args)
         vars.addAll(arg.vars());
     return vars;
+  }
+
+  public Set<Constant> consts()
+  {
+    Set<Constant> consts = new HashSet<>();
+    if (this.hasArgs())
+      for(E arg : this.args)
+        consts.addAll(arg.consts());
+    return consts;
   }
 }

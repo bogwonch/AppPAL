@@ -3,6 +3,7 @@ package appguarden.apppal.language.constraint;
 import java.util.HashSet;
 import java.util.Set;
 
+import appguarden.apppal.language.Constant;
 import appguarden.apppal.language.E;
 import appguarden.apppal.language.Variable;
 
@@ -18,6 +19,8 @@ public class Sat extends Constraint
     return "sat";
   }
   public Set<Variable> vars() { return new HashSet<>(); }
+  public Set<Constant> consts() { return new HashSet<>(); }
+
 
   @Override
   public boolean isTriviallyTrue() { return true; }

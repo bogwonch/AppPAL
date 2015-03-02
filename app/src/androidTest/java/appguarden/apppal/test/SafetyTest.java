@@ -83,4 +83,10 @@ public class SafetyTest extends InstrumentationTestCase
     assertEquals(u4.isSafe(), false);
     assertEquals(u5.isSafe(), false);
   }
+
+  public void testEntityHolding() throws Exception
+  {
+
+
+  }
 }

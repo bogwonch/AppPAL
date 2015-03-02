@@ -7,12 +7,13 @@ import java.util.Set;
 
 import appguarden.apppal.language.constraint.Constraint;
 import appguarden.apppal.language.constraint.Sat;
+import appguarden.apppal.interfaces.EntityHolding;
 
 /**
  * AppPAL claims
  * fact [ if fact,* ] [ where c ]
  */
-public class Claim
+public class Claim implements EntityHolding
 {
   public final Fact consequent;
   public final List<Fact> antecedents;
@@ -83,6 +84,14 @@ public class Claim
     return vars;
   }
 
+  public Set<Constant> consts()
+  {
+    Set<Constant> consts = this.consequent.consts();
+    consts.addAll(this.antecedentConsts());
+    consts.addAll(this.constraint.consts());
+    return consts;
+  }
+
   /**
    * Get the vars from the antecedent conditions
    * @return Set of variables in the antecedent conditions
@@ -96,5 +105,17 @@ public class Claim
     return vars;
   }
 
+  /**
+   * Get the constants from the antecedent conditions
+   * @return Set of constants in the antecedent conditions
+   */
+  public Set<Constant> antecedentConsts()
+  {
+    Set<Constant> consts = new HashSet<>();
+    if (this.hasAntecedents())
+      for (Fact f : this.antecedents)
+        consts.addAll(f.consts());
+    return consts;
+  }
 
 }

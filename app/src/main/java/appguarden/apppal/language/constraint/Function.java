@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import appguarden.apppal.language.Constant;
 import appguarden.apppal.language.E;
 import appguarden.apppal.language.Variable;
 
@@ -43,5 +44,12 @@ public class Function extends CE
     for (CE e : this.args)
       vars.addAll(e.vars());
     return vars;
+  }
+  public Set<Constant> consts()
+  {
+    Set<Constant> consts = new HashSet<>();
+    for (CE e : this.args)
+      consts.addAll(e.consts());
+    return consts;
   }
 }
