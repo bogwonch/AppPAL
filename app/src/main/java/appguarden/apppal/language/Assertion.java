@@ -1,5 +1,7 @@
 package appguarden.apppal.language;
 
+import android.util.Log;
+
 import java.util.Set;
 
 /**
@@ -44,7 +46,8 @@ public class Assertion
     else
     {
       assert(this.says.consequent.object instanceof CanSay);
-      this.says.consequent.subject.safeIn(this);
+      if (! this.says.consequent.subject.safeIn(this))
+        return false;
     }
 
     // 2. vars c are a subset of the vars of the consequent and antecedent.

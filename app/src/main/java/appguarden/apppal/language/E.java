@@ -1,5 +1,7 @@
 package appguarden.apppal.language;
 
+import android.util.Log;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,6 +41,7 @@ public abstract class E
    */
   public boolean safeIn(Assertion a)
   {
-    return a.says.consequent.vars().contains(this) && a.says.antecedentVars().contains(this);
+    if (this.kind == EKind.CONSTANT) return true;
+    else return (a.says.consequent.vars().contains(this) && a.says.antecedentVars().contains(this));
   }
 }

@@ -1,6 +1,7 @@
 package appguarden.apppal.test;
 
 import android.test.InstrumentationTestCase;
+import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,10 @@ public class SafetyTest extends InstrumentationTestCase
     assertEquals(notFlatFact.isFlat(), false);
   }
 
+  /**
+   * Tests the assertion safety conditions using the examples from Becker's SecPAL paper.
+   * @throws Exception
+   */
   public void testSafety() throws Exception
   {
     /*
@@ -47,7 +52,9 @@ public class SafetyTest extends InstrumentationTestCase
      */
     E a = new Constant("A");
     E b = new Constant("B");
+    E c = new Constant("C");
     E f = new Constant("Foo");
+    E w = new Variable("w");
     E x = new Variable("x");
     E y = new Variable("y");
     E z = new Variable("z");
@@ -102,5 +109,36 @@ public class SafetyTest extends InstrumentationTestCase
     assertEquals(s4.isSafe(), true);
     assertEquals(s5.isSafe(), true);
     assertEquals(s6.isSafe(), true);
+
+    /* These Assertions are unsafe (from paper)
+      U1. A says B can x Foo
+      U2. A says z can-read Foo if B can x y
+      U3. A says B can-read Foo if B can x y, w̸=y
+      U4. A says B can x y if B can-say 0 C can x y
+      U5. A says w can-say 0 x can y z
+    */
+
+    Fact bCanXF = new Fact(b, canXF);
+    Fact zCanReadF = new Fact(z, canReadFoo);
+    Fact cCanXY = new Fact(c, canXY);
+
+    VP canSay0CCanXY = new CanSay(D.ZERO, cCanXY);
+    Fact bCanSay0CCanXY = new Fact(b, canSay0CCanXY);
+
+    Fact wCanSay0XCanYZ = new Fact(w, canSay0XCanYZ);
+
+    List<Fact> a_bCanSay0CCanXY = new LinkedList<>();
+    a_bCanSay0CCanXY.add(bCanSay0CCanXY);
+
+    Assertion u1 = new Assertion(a, new Claim(bCanXF));
+    Assertion u2 = new Assertion(a, new Claim(zCanReadF, a_BCanXY));
+    // TODO: U3
+    Assertion u4 = new Assertion(a, new Claim(bCanXY, a_bCanSay0CCanXY));
+    Assertion u5 = new Assertion(a, new Claim(wCanSay0XCanYZ));
+
+    assertEquals(u1.isSafe(), false);
+    assertEquals(u2.isSafe(), false);
+    assertEquals(u4.isSafe(), false);
+    assertEquals(u5.isSafe(), false);
   }
 }
