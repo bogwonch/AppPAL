@@ -5,10 +5,12 @@ import android.util.Log;
 import java.util.HashSet;
 import java.util.Set;
 
+import appguarden.apppal.language.constraint.CE;
+
 /**
  * AppPAL entity
  */
-public abstract class E
+public abstract class E extends CE
 {
   public final String name;
   public final EKind kind;

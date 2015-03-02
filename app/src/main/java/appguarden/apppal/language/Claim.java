@@ -1,8 +1,12 @@
 package appguarden.apppal.language;
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import appguarden.apppal.language.constraint.Constraint;
+import appguarden.apppal.language.constraint.Sat;
 
 /**
  * AppPAL claims
@@ -20,19 +24,27 @@ public class Claim
   public Claim(Fact f, List<Fact> a, Constraint c)
   {
     this.consequent = f;
-    this.antecedents = a;
-    this.constraint = c;
+
+    if (a == null)
+      this.antecedents = new LinkedList<>();
+    else
+      this.antecedents = a;
+
+    if (c == null)
+      this.constraint = new Sat();
+    else
+      this.constraint = c;
   }
 
   /* Utility constructors */
   public Claim(Fact c)
   {
-    this(c, null, new Constraint(true));
+    this(c, null, new Sat());
   }
 
   public Claim(Fact f, List<Fact> a)
   {
-    this(f, a, new Constraint(true));
+    this(f, a, new Sat());
   }
 
   public Claim(Fact consequent, Constraint c)

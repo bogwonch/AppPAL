@@ -80,4 +80,20 @@ public class ParserTest extends InstrumentationTestCase
     Log.d("antlr:input    ", str);
     assertEquals(a.toString(), str);
   }
+
+  public void testParseConstraint() throws Exception
+  {
+    String str = "X says Y isCool where equal(X, Y) = true, ! equal(Y, X) = false.";
+    InputStream in = new StringBufferInputStream(str);
+    ANTLRInputStream input = new ANTLRInputStream(in);
+    AppPALLexer lexer = new AppPALLexer(input);
+    CommonTokenStream tokens = new CommonTokenStream(lexer);
+    AppPALParser parser = new AppPALParser(tokens);
+    ParseTree tree = parser.assertion();
+    AppPALEmitter emitter = new AppPALEmitter();
+    Assertion a = (appguarden.apppal.language.Assertion) emitter.visit(tree);
+    Log.d("antlr:assertion", a.toString());
+    Log.d("antlr:input    ", str);
+    assertEquals(a.toString(), str);
+  }
 }

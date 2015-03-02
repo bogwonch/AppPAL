@@ -26,7 +26,17 @@ assertion: e 'says' claim '.';
 
 ac: assertion+;
 
-c: 'true';
+ce: e                                      #entity
+  | PREDICATE_NAME '(' (ce (',' ce)*)? ')' #function
+  | 'true'                                 #true
+  | 'false'                                #false
+  ;
+
+c: 'sat'      #satisfaction
+ | '!' c      #negation
+ | ce '=' ce  #equality
+ | c ',' c    #conjugation
+ ;
 
 WS: [ \t\r\n]+ -> skip;
 

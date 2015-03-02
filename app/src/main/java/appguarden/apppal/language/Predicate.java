@@ -2,6 +2,7 @@ package appguarden.apppal.language;
 
 
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +24,10 @@ public class Predicate extends VP
   public Predicate(String name, List<E> args)
   {
     this.name = name;
-    this.args = args;
+    if (args == null)
+      this.args = new LinkedList<E>();
+    else
+      this.args = args;
   }
 
   /** Check whether this predicate has arguments
