@@ -21,7 +21,7 @@ public class CanActAs extends VP
     return "can-act-as " + this.renaming;
   }
 
-  public Set<E> vars()
+  public Set<Variable> vars()
   {
     return renaming.vars();
   }

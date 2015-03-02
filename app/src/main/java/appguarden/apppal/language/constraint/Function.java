@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import appguarden.apppal.language.E;
+import appguarden.apppal.language.Variable;
 
 /**
  * Constraint Function
@@ -36,9 +37,9 @@ public class Function extends CE
     return str+")";
   }
 
-  public Set<E> vars()
+  public Set<Variable> vars()
   {
-    Set<E> vars = new HashSet<>();
+    Set<Variable> vars = new HashSet<>();
     for (CE e : this.args)
       vars.addAll(e.vars());
     return vars;

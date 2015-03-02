@@ -34,9 +34,9 @@ public class Fact
     return ! (this.object instanceof CanSay);
   }
 
-  public Set<E> vars()
+  public Set<Variable> vars()
   {
-    Set<E> vars = this.subject.vars();
+    Set<Variable> vars = this.subject.vars();
     vars.addAll(this.object.vars());
     return vars;
   }

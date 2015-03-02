@@ -8,5 +8,5 @@ import java.util.Set;
 public abstract class VP
 {
   public abstract String toString();
-  public abstract Set<E> vars();
+  public abstract Set<Variable> vars();
 }

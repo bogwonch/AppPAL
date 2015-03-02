@@ -53,9 +53,9 @@ public class Predicate extends VP
     return answer;
   }
 
-  public Set<E> vars()
+  public Set<Variable> vars()
   {
-    Set<E> vars = new HashSet<>();
+    Set<Variable> vars = new HashSet<>();
     if (this.hasArgs())
       for(E arg : this.args)
         vars.addAll(arg.vars());

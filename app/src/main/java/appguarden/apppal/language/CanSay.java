@@ -23,7 +23,7 @@ public class CanSay extends VP
     return "can-say " + this.d + " " + this.fact;
   }
 
-  public Set<E> vars()
+  public Set<Variable> vars()
   {
     return this.fact.vars();
   }

@@ -23,11 +23,11 @@ public abstract class E extends CE
 
   public abstract String toString();
 
-  public Set<E> vars()
+  public Set<Variable> vars()
   {
-    Set<E> ans = new HashSet<>();
+    Set<Variable> ans = new HashSet<>();
     if (this.kind == EKind.VARIABLE)
-      ans.add(this);
+      ans.add((Variable) this);
     return ans;
   }
 

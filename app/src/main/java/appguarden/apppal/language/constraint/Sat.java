@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import appguarden.apppal.language.E;
+import appguarden.apppal.language.Variable;
 
 /**
  * The trivially true class
@@ -16,7 +17,7 @@ public class Sat extends Constraint
   {
     return "sat";
   }
-  public Set<E> vars() { return new HashSet<>(); }
+  public Set<Variable> vars() { return new HashSet<>(); }
 
   @Override
   public boolean isTriviallyTrue() { return true; }

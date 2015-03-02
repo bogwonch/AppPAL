@@ -4,9 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import appguarden.apppal.language.E;
+import appguarden.apppal.language.Variable;
 
 /**
- * Created by bogwonch on 02/03/2015.
+ * Booleans are the only value we need...
  */
 public class Bool extends CE
 {
@@ -24,5 +25,5 @@ public class Bool extends CE
       return "false";
   }
 
-  public Set<E> vars() { return new HashSet<>(); }
+  public Set<Variable> vars() { return new HashSet<>(); }
 }

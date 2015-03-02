@@ -79,8 +79,8 @@ public class Assertion
     }
 
     // 2. vars c are a subset of the vars of the consequent and antecedent.
-    Set<E> c_vars = this.says.constraint.vars();
-    Set<E> o_vars = this.says.consequent.vars();
+    Set<Variable> c_vars = this.says.constraint.vars();
+    Set<Variable> o_vars = this.says.consequent.vars();
     o_vars.addAll(this.says.antecedentVars());
     if (! o_vars.containsAll(c_vars))
       return false;

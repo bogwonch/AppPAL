@@ -3,9 +3,10 @@ package appguarden.apppal.language.constraint;
 import java.util.Set;
 
 import appguarden.apppal.language.E;
+import appguarden.apppal.language.Variable;
 
 /**
- * Created by bogwonch on 02/03/2015.
+ * Equality in constraints.
  */
 public class Equals extends Constraint
 {
@@ -20,9 +21,9 @@ public class Equals extends Constraint
 
   public String toString() { return this.lhs+" = "+this.rhs; }
 
-  public Set<E> vars()
+  public Set<Variable> vars()
   {
-    Set<E> vars = this.lhs.vars();
+    Set<Variable> vars = this.lhs.vars();
     vars.addAll(this.rhs.vars());
     return vars;
   }

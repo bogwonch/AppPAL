@@ -75,9 +75,9 @@ public class Claim
     return ! (this.antecedents == null || this.antecedents.isEmpty());
   }
 
-  public Set<E> vars()
+  public Set<Variable> vars()
   {
-    Set<E> vars = this.consequent.vars();
+    Set<Variable> vars = this.consequent.vars();
     vars.addAll(this.antecedentVars());
     vars.addAll(this.constraint.vars());
     return vars;
@@ -87,9 +87,9 @@ public class Claim
    * Get the vars from the antecedent conditions
    * @return Set of variables in the antecedent conditions
    */
-  public Set<E> antecedentVars()
+  public Set<Variable> antecedentVars()
   {
-    Set<E> vars = new HashSet<>();
+    Set<Variable> vars = new HashSet<>();
     if (this.hasAntecedents())
       for (Fact f : this.antecedents)
         vars.addAll(f.vars());

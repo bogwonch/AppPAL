@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import appguarden.apppal.language.E;
+import appguarden.apppal.language.Variable;
 
 /**
  * SecPAL Constraint
@@ -15,6 +16,6 @@ abstract public class Constraint
     return false;
   }
 
-  public abstract Set<E> vars();
+  public abstract Set<Variable> vars();
   public abstract String toString();
 }
