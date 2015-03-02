@@ -13,12 +13,11 @@ import appguarden.apppal.grammar.AppPALEmitter;
 import appguarden.apppal.grammar.AppPALLexer;
 import appguarden.apppal.grammar.AppPALParser;
 import appguarden.apppal.interfaces.EntityHolding;
-import appguarden.apppal.interfaces.Parsable;
 
 /**
  * SecPAL Assertion
  */
-public class Assertion implements EntityHolding, Parsable
+public class Assertion implements EntityHolding
 {
   public final E speaker;
   public final Claim says;

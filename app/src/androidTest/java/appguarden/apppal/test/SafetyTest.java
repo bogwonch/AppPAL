@@ -3,8 +3,10 @@ package appguarden.apppal.test;
 import android.test.InstrumentationTestCase;
 import android.util.Log;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import appguarden.apppal.language.Assertion;
 import appguarden.apppal.language.CanSay;
@@ -84,9 +86,27 @@ public class SafetyTest extends InstrumentationTestCase
     assertEquals(u5.isSafe(), false);
   }
 
+  /**
+   * Check that we can extract the entities we would expect to from an assertion.
+   * @throws Exception
+   */
   public void testEntityHolding() throws Exception
   {
+    Assertion assertion = Assertion.parse("\"a\" says \"b\" canRead(\"foo\") if \"b\" can(X,Y) where ! X = Y.");
 
+    Set<Constant> consts = new HashSet<>();
+    consts.add(Constant.parse("\"a\""));
+    consts.add(Constant.parse("\"b\""));
+    consts.add(Constant.parse("\"foo\""));
 
+    Set<Variable> vars = new HashSet<>();
+    vars.add(Variable.parse("X"));
+    vars.add(Variable.parse("Y"));
+
+    assertEquals(consts, assertion.consts());
+    assertEquals(vars, assertion.vars());
+
+    Set<Variable> empty = new HashSet<>();
+    assertNotSame(empty, vars);
   }
 }
