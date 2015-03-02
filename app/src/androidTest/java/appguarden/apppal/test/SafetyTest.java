@@ -50,62 +50,16 @@ public class SafetyTest extends InstrumentationTestCase
       S5. A says z can x y if z can x Foo, z can-read y
       S6. A says B can-say 0 x can y z
      */
-    E a = new Constant("A");
-    E b = new Constant("B");
-    E c = new Constant("C");
-    E f = new Constant("Foo");
-    E w = new Variable("w");
-    E x = new Variable("x");
-    E y = new Variable("y");
-    E z = new Variable("z");
-
-    List<E> l_foo = new LinkedList<>();
-    l_foo.add(f);
-    List<E> l_y = new LinkedList<>();
-    l_y.add(y);
-    List<E> xy = new LinkedList<>();
-    xy.add(x);
-    xy.add(y);
-    List<E> xf = new LinkedList<>();
-    xf.add(x);
-    xf.add(f);
-    List<E> yz = new LinkedList<>();
-    yz.add(y);
-    yz.add(z);
-
-    VP canReadFoo = new Predicate("can-read", l_foo);
-    VP canReadY = new Predicate("can-read", l_y);
-    VP canXY = new Predicate("can", xy);
-    VP canXF = new Predicate("can", xf);
-    VP canYZ = new Predicate("can", yz);
-
-    Fact bCanReadF = new Fact(b, canReadFoo);
-    Fact zCanReadY = new Fact(z, canReadY);
-    Fact bCanXY = new Fact(b, canXY);
-    Fact xCanYZ = new Fact(x, canYZ);
-    Fact zCanXY = new Fact(z, canXY);
-    Fact zCanXF = new Fact(z, canXF);
-
-    VP canSay0XCanYZ = new CanSay(D.ZERO, xCanYZ);
-    Fact bCanSay0XCanYZ = new Fact(b, canSay0XCanYZ);
-
-    List<Fact> a_BCanXY = new LinkedList<>();
-    a_BCanXY.add(bCanXY);
-
-    List<Fact> a_zCanXY_zCanReadY = new LinkedList<>();
-    a_zCanXY_zCanReadY.add(zCanXF);
-    a_zCanXY_zCanReadY.add(zCanReadY);
-
-    Assertion s1 = new Assertion(a, new Claim(bCanReadF));
-    Assertion s2 = new Assertion(a, new Claim(bCanReadF, a_BCanXY));
-    // TODO: S3
-    Assertion s4 = new Assertion(a, new Claim(bCanXY, a_BCanXY));
-    Assertion s5 = new Assertion(a, new Claim(zCanXY, a_zCanXY_zCanReadY));
-    Assertion s6 = new Assertion(a, new Claim(bCanSay0XCanYZ));
+    Assertion s1 = Assertion.parse("\"a\" says \"b\" canRead(\"foo\").");
+    Assertion s2 = Assertion.parse("\"a\" says \"b\" canRead(\"foo\") if \"b\" can(X,Y).");
+    Assertion s3 = Assertion.parse("\"a\" says \"b\" canRead(\"foo\") if \"b\" can(X,Y) where ! X = Y.");
+    Assertion s4 = Assertion.parse("\"a\" says \"b\" can(X,Y) if \"b\" can(X,Y).");
+    Assertion s5 = Assertion.parse("\"a\" says Z can(X,Y) if Z can(X,\"foo\"), Z canRead(Y).");
+    Assertion s6 = Assertion.parse("\"a\" says \"b\" can-say 0 X can(Y,Z).");
 
     assertEquals(s1.isSafe(), true);
     assertEquals(s2.isSafe(), true);
-    //assertEquals(s3.isSafe(), true);
+    assertEquals(s3.isSafe(), true);
     assertEquals(s4.isSafe(), true);
     assertEquals(s5.isSafe(), true);
     assertEquals(s6.isSafe(), true);
@@ -117,27 +71,15 @@ public class SafetyTest extends InstrumentationTestCase
       U4. A says B can x y if B can-say 0 C can x y
       U5. A says w can-say 0 x can y z
     */
-
-    Fact bCanXF = new Fact(b, canXF);
-    Fact zCanReadF = new Fact(z, canReadFoo);
-    Fact cCanXY = new Fact(c, canXY);
-
-    VP canSay0CCanXY = new CanSay(D.ZERO, cCanXY);
-    Fact bCanSay0CCanXY = new Fact(b, canSay0CCanXY);
-
-    Fact wCanSay0XCanYZ = new Fact(w, canSay0XCanYZ);
-
-    List<Fact> a_bCanSay0CCanXY = new LinkedList<>();
-    a_bCanSay0CCanXY.add(bCanSay0CCanXY);
-
-    Assertion u1 = new Assertion(a, new Claim(bCanXF));
-    Assertion u2 = new Assertion(a, new Claim(zCanReadF, a_BCanXY));
-    // TODO: U3
-    Assertion u4 = new Assertion(a, new Claim(bCanXY, a_bCanSay0CCanXY));
-    Assertion u5 = new Assertion(a, new Claim(wCanSay0XCanYZ));
+    Assertion u1 = Assertion.parse("\"a\" says \"b\" can(X,\"foo\").");
+    Assertion u2 = Assertion.parse("\"a\" says Z canRead(\"foo\") if \"b\" can(X,Y).");
+    Assertion u3 = Assertion.parse("\"a\" says \"b\" canRead(\"foo\") if \"b\" can(X,Y) where ! W = Y.");
+    Assertion u4 = Assertion.parse("\"a\" says \"b\" can(X,Y) if \"b\" can-say 0 \"c\" can(X,Y).");
+    Assertion u5 = Assertion.parse("\"a\" says W can-say 0 X can(Y,Z).");
 
     assertEquals(u1.isSafe(), false);
     assertEquals(u2.isSafe(), false);
+    assertEquals(u3.isSafe(), false);
     assertEquals(u4.isSafe(), false);
     assertEquals(u5.isSafe(), false);
   }

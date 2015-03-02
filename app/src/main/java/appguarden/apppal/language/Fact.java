@@ -1,6 +1,8 @@
 package appguarden.apppal.language;
 
 
+import android.util.Log;
+
 import java.util.Set;
 
 /**
@@ -34,8 +36,8 @@ public class Fact
 
   public Set<E> vars()
   {
-    Set<E> vars = subject.vars();
-    vars.addAll(object.vars());
+    Set<E> vars = this.subject.vars();
+    vars.addAll(this.object.vars());
     return vars;
   }
 }

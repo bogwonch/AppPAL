@@ -31,6 +31,32 @@ public abstract class E extends CE
     return ans;
   }
 
+  /*
+   * Java is an *incredibly* stupid language and can't cope with ideas like equality well.
+   * Oh for C... Oh for Haskell...
+   */
+  @Override
+  public int hashCode()
+  {
+    int result = 17;
+    result = result * 31 + this.name.hashCode();
+    result = result * 31 + this.kind.hashCode();
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object other)
+  {
+    if (!(other instanceof E)) {
+      return false;
+    }
+    E e = (E) other;
+    if (this.kind != e.kind) return false;
+    if (! this.name.equals(e.name)) return false;
+    return true;
+  }
+
+
   /**
    * @brief Check whether an entity is safe in an assertion
    *
