@@ -77,4 +77,9 @@ public class AC
     this.checkAssertionSafety();
     this.populateConstants();
   }
+
+  public List<Assertion> getAssertions()
+  {
+    return this.assertions;
+  }
 }

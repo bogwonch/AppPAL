@@ -2,6 +2,8 @@ package appguarden.apppal.language;
 
 import java.io.IOException;
 
+import appguarden.apppal.evaluation.Unification;
+
 /**
  * A variable instance of an entity
  */

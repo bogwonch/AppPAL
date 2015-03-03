@@ -7,19 +7,23 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+import appguarden.apppal.evaluation.Substitution;
+import appguarden.apppal.evaluation.Unification;
 import appguarden.apppal.grammar.AppPALEmitter;
 import appguarden.apppal.grammar.AppPALLexer;
 import appguarden.apppal.grammar.AppPALParser;
+import appguarden.apppal.interfaces.Unifiable;
 import appguarden.apppal.language.constraint.CE;
 import appguarden.apppal.interfaces.EntityHolding;
 
 /**
  * AppPAL entity
  */
-public abstract class E extends CE implements EntityHolding
+public abstract class E extends CE implements EntityHolding, Unifiable<E>
 {
   public final String name;
   public final EKind kind;
@@ -64,24 +68,24 @@ public abstract class E extends CE implements EntityHolding
   @Override
   public boolean equals(Object other)
   {
-    if (!(other instanceof E)) {
+    if (!(other instanceof E))
+    {
       return false;
     }
     E e = (E) other;
     if (this.kind != e.kind) return false;
-    if (! this.name.equals(e.name)) return false;
+    if (!this.name.equals(e.name)) return false;
     return true;
   }
 
 
   /**
-   * @brief Check whether an entity is safe in an assertion
-   *
-   * A variable v is safe in an Assertion of the form:
-   *   A says f if f_1, ..., f_n where c
-   * if v is in f and v is in f_1,...f_n.
-   *
    * @param a assertion to check safety in
+   * @brief Check whether an entity is safe in an assertion
+   * <p/>
+   * A variable v is safe in an Assertion of the form:
+   * A says f if f_1, ..., f_n where c
+   * if v is in f and v is in f_1,...f_n.
    * @returns boolean
    */
   public boolean safeIn(Assertion a)
@@ -90,7 +94,9 @@ public abstract class E extends CE implements EntityHolding
     else return (a.says.consequent.vars().contains(this) && a.says.antecedentVars().contains(this));
   }
 
-  /** Create a Constant by parsing a string
+  /**
+   * Create a Constant by parsing a string
+   *
    * @param str the Constant to parse
    * @returns the parsed Constant
    */
@@ -104,5 +110,51 @@ public abstract class E extends CE implements EntityHolding
     ParseTree tree = parser.e();
     AppPALEmitter emitter = new AppPALEmitter();
     return (E) emitter.visit(tree);
+  }
+
+  public Unification unify(E other)
+  {
+    Unification unification = new Unification();
+    if (this.kind == EKind.CONSTANT && other.kind == EKind.CONSTANT)
+    {
+      if (!this.name.equals(other.name))
+        unification.fails();
+    }
+    else
+    {
+      Variable x;
+      E t;
+      if (this.kind == EKind.VARIABLE)
+      {
+        x = (Variable) this;
+        t = other;
+      }
+      else
+      {
+        x = (Variable) other;
+        t = this;
+      }
+
+      if (!x.equals(t))
+        try
+        {
+          unification.add(x, t);
+        } catch (Exception e)
+        {
+          unification.fails();
+        }
+    }
+    return unification;
+  }
+
+  public E substitute(HashMap<Variable, Substitution> delta)
+  {
+    if (this.kind == EKind.CONSTANT) return this;
+    if (delta.containsKey(this))
+    {
+      Substitution theta = delta.get(this);
+      return theta.to;
+    }
+    return this;
   }
 }
