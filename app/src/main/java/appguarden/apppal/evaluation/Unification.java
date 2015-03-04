@@ -70,7 +70,7 @@ public class Unification
 
   public void compose(Unification other)
   {
-    if (other.hasFailed()) this.fails();
+    if (other.hasFailed() || this.hasFailed()) this.fails();
     else
     {
       for (Substitution s : this.theta.values())
