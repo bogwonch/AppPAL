@@ -163,6 +163,7 @@ public class Assertion implements EntityHolding, Unifiable<Assertion>
   public Assertion consequence()
   { return new Assertion(this.speaker, new Claim(this.says.consequent), this.scope); }
 
+  // TODO: refactor into constructors
   public static Assertion makeCanActAs(E speaker, E subject, Constant c)
   {
     return Assertion.make(speaker, subject, new CanActAs(c));
@@ -170,6 +171,16 @@ public class Assertion implements EntityHolding, Unifiable<Assertion>
 
   public static Assertion make(E speaker, E c, VP object)
   {
-    return new Assertion(speaker, new Claim(new Fact(c, object)));
+    return Assertion.make(speaker, new Fact(c, object));
+  }
+
+  public static Assertion make(E speaker, Fact consequent)
+  {
+    return new Assertion(speaker, new Claim(consequent));
+  }
+
+  public static Assertion makeCanSay(E speaker, Constant c, D d, Fact fact)
+  {
+    return Assertion.make(speaker, c, new CanSay(d, fact));
   }
 }

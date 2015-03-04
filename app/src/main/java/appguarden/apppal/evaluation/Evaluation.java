@@ -1,6 +1,9 @@
 package appguarden.apppal.evaluation;
 
+import java.util.EnumSet;
+
 import appguarden.apppal.language.Assertion;
+import appguarden.apppal.language.CanSay;
 import appguarden.apppal.language.Constant;
 import appguarden.apppal.language.D;
 
@@ -44,10 +47,19 @@ public class Evaluation
 
     this.rt.markUnfinished(q, d);
 
+    // TODO: refactor this bollox
     final Proof condProof = this.cond(q, d);
     if (condProof.isKnown())
     {
       final Result result = new Result(q, d, condProof);
+      this.rt.update(result);
+      return result;
+    }
+
+    final Proof canSayProof = this.canSay(q, d);
+    if (canSayProof.isKnown())
+    {
+      final Result result = new Result(q, d, canSayProof);
       this.rt.update(result);
       return result;
     }
@@ -85,19 +97,48 @@ public class Evaluation
     return new Proof(false);
   }
 
+  private Proof canSay(Assertion q, D d)
+  {
+    // Disallow this rule when delegation banned
+    if (d == D.ZERO) return new Proof(false);
+
+    // Disallow nested can-say statements
+    if (q.says.consequent.object instanceof CanSay) return new Proof(false);
+
+    for (final Constant c : this.ac.getConstants())
+    {
+      for(final D depth : EnumSet.of(D.ZERO, D.INF))
+      {
+        final Assertion delegator =
+          Assertion.makeCanSay(q.speaker, c, depth, q.says.consequent);
+        final Result rDelegator = evaluate(delegator, d);
+        if (rDelegator.isProven())
+        {
+          final Assertion delegation = Assertion.make(c, q.says.consequent);
+          final Result rDelegation = evaluate(delegation, depth);
+          if (rDelegation.isProven())
+            return new Proof(true);
+        }
+      }
+    }
+
+    return new Proof(false);
+  }
+
+
   private Proof canActAs(Assertion q, D d)
   {
     for (final Constant c : this.ac.getConstants())
     {
       final Assertion renaming =
         Assertion.makeCanActAs(q.speaker, q.says.consequent.subject, c);
+      final Result rRenaming = evaluate(renaming, d);
+      if (! rRenaming.isProven()) continue;
+
       final Assertion renamed =
         Assertion.make(q.speaker, c, q.says.consequent.object);
-
-      final Result pRenaming = evaluate(renaming, d);
-      if (! pRenaming.isProven()) continue;
-      final Result pRenamed = evaluate(renamed, d);
-      if (! pRenamed.isProven()) continue;
+      final Result rRenamed = evaluate(renamed, d);
+      if (! rRenamed.isProven()) continue;
 
       return new Proof(true);
     }
