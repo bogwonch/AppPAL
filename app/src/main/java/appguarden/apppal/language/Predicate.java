@@ -21,7 +21,6 @@ public class Predicate extends VP implements EntityHolding
   public final String name;
   public final List<E> args;
 
-
   public Predicate(String name)
   {
     this(name, null);
@@ -61,7 +60,7 @@ public class Predicate extends VP implements EntityHolding
 
   public Set<Variable> vars()
   {
-    Set<Variable> vars = new HashSet<>();
+    final Set<Variable> vars = new HashSet<>();
     if (this.hasArgs())
       for(E arg : this.args)
         vars.addAll(arg.vars());
@@ -70,7 +69,7 @@ public class Predicate extends VP implements EntityHolding
 
   public Set<Constant> consts()
   {
-    Set<Constant> consts = new HashSet<>();
+    final Set<Constant> consts = new HashSet<>();
     if (this.hasArgs())
       for(E arg : this.args)
         consts.addAll(arg.consts());
@@ -79,22 +78,22 @@ public class Predicate extends VP implements EntityHolding
 
   public Unification unify(VP vp)
   {
-    Unification unification = new Unification();
+    final Unification unification = new Unification();
     if (! (vp instanceof Predicate))
       unification.fails();
 
-    Predicate other = (Predicate) vp;
+    final Predicate other = (Predicate) vp;
 
     if (! this.name.equals(other.name))
       unification.fails();
 
-    int n = this.args.size();
+    final int n = this.args.size();
     if (n != other.args.size()) unification.fails();
 
     for (int k = 0; k < n; k++)
     {
-      E thetaX = this.args.get(k).substitute(unification.theta);
-      E thetaY = other.args.get(k).substitute(unification.theta);
+      final E thetaX = this.args.get(k).substitute(unification.theta);
+      final E thetaY = other.args.get(k).substitute(unification.theta);
       Unification tau = thetaX.unify(thetaY);
       unification.compose(tau);
       if (unification.hasFailed())
@@ -106,7 +105,7 @@ public class Predicate extends VP implements EntityHolding
 
   public Predicate substitute(Map<Variable, Substitution> delta)
   {
-    LinkedList<E> args = new LinkedList<>();
+    final LinkedList<E> args = new LinkedList<>();
     for (E e : this.args)
       args.add(e.substitute(delta));
     return new Predicate(this.name, args);
