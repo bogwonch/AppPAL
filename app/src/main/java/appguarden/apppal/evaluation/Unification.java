@@ -15,7 +15,7 @@ import appguarden.apppal.language.Variable;
  */
 public class Unification
 {
-  private Map<Variable, Substitution> theta;
+  public Map<Variable, Substitution> theta;
 
   private boolean success;
 
@@ -40,6 +40,8 @@ public class Unification
     this.theta.put(from, delta);
   }
 
+
+
   public void fails()
   {
     this.theta = null;
@@ -54,9 +56,7 @@ public class Unification
   public String toString()
   {
     if (!this.success)
-    {
       return "_|_";
-    }
 
     Object[] deltas = this.theta.values().toArray();
     if (deltas.length == 0) return "{}";
@@ -66,5 +66,24 @@ public class Unification
       str += ((i == 0)? " ":", ") + deltas[i];
     str += " }";
     return str;
+  }
+
+  public void compose(Unification other)
+  {
+    if (other.hasFailed()) this.fails();
+    else
+    {
+      for (Substitution s : this.theta.values())
+      {
+        // Apply the substitutions from this to the other
+        for (Substitution t : other.theta.values())
+          t.substitute(s);
+
+        // Add any missing keys from this
+        if (! other.theta.containsValue(s))
+          other.theta.put(s.from, s);
+      }
+      this.theta = other.theta;
+    }
   }
 }

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import appguarden.apppal.evaluation.Substitution;
@@ -147,7 +148,7 @@ public abstract class E extends CE implements EntityHolding, Unifiable<E>
     return unification;
   }
 
-  public E substitute(HashMap<Variable, Substitution> delta)
+  public E substitute(Map<Variable, Substitution> delta)
   {
     if (this.kind == EKind.CONSTANT) return this;
     if (delta.containsKey(this))

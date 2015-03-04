@@ -9,7 +9,7 @@ import appguarden.apppal.language.Variable;
 public class Substitution
 {
   public final Variable from;
-  public final E to;
+  public E to;
 
   public Substitution(Variable from, E to)
   {
@@ -18,4 +18,10 @@ public class Substitution
   }
 
   public String toString() { return this.from+"=>"+this.to; }
+
+  public void substitute(Variable from, E to)
+  { if (this.to.equals(from)) this.to = to; }
+
+  public void substitute(Substitution s)
+  { this.substitute(s.from, s.to); }
 }

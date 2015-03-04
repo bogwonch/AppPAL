@@ -1,11 +1,15 @@
 package appguarden.apppal.language;
 
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import appguarden.apppal.evaluation.Substitution;
+import appguarden.apppal.evaluation.Unification;
 import appguarden.apppal.interfaces.EntityHolding;
 
 /**
@@ -71,5 +75,40 @@ public class Predicate extends VP implements EntityHolding
       for(E arg : this.args)
         consts.addAll(arg.consts());
     return consts;
+  }
+
+  public Unification unify(VP vp)
+  {
+    Unification unification = new Unification();
+    if (! (vp instanceof Predicate))
+      unification.fails();
+
+    Predicate other = (Predicate) vp;
+
+    if (! this.name.equals(other.name))
+      unification.fails();
+
+    int n = this.args.size();
+    if (n != other.args.size()) unification.fails();
+
+    for (int k = 0; k < n; k++)
+    {
+      E thetaX = this.args.get(k).substitute(unification.theta);
+      E thetaY = other.args.get(k).substitute(unification.theta);
+      Unification tau = thetaX.unify(thetaY);
+      unification.compose(tau);
+      if (unification.hasFailed())
+        return unification;
+    }
+
+    return unification;
+  }
+
+  public Predicate substitute(Map<Variable, Substitution> delta)
+  {
+    LinkedList<E> args = new LinkedList<>();
+    for (E e : this.args)
+      args.add(e.substitute(delta));
+    return new Predicate(this.name, args);
   }
 }
