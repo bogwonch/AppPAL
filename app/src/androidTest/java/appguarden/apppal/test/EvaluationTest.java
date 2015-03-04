@@ -44,5 +44,15 @@ public class EvaluationTest extends InstrumentationTestCase
 
     assertEquals(f5.unify(f6).toString(), "{ X=>\"a\", Y=>\"a\" }");
     assertEquals(f5.unify(f1).hasFailed(), true);
+
+    final Fact f7 = Fact.parse("X can-say 0 Y likes(X)");
+    final Fact f8 = Fact.parse("\"a\" can-say 0 \"b\" likes(\"a\")");
+    final Fact f9 = Fact.parse("\"a\" can-say inf \"b\" likes(\"a\")");
+    final Fact fA = Fact.parse("\"a\" can-say 0 \"b\" likes(\"b\")");
+
+    assertEquals(f7.unify(f8).toString(), "{ X=>\"a\", Y=>\"b\" }");
+    assertEquals(f7.unify(f7).toString(), "{}");
+    assertEquals(f7.unify(f9).hasFailed(), true);
+    assertEquals(f7.unify(fA).hasFailed(), true);
   }
 }
