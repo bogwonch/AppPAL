@@ -9,9 +9,9 @@ import appguarden.apppal.language.E;
 import appguarden.apppal.language.Fact;
 
 /**
- * Tests various aspects of evaluation including unification.
+ * Tests various aspects of unification
  */
-public class EvaluationTest extends InstrumentationTestCase
+public class UnificationTest extends InstrumentationTestCase
 {
   public void testUnificationE() throws Exception
   {
@@ -70,5 +70,7 @@ public class EvaluationTest extends InstrumentationTestCase
 
     assertEquals(a1.unify(a2).toString(), "{ X.1=>\"a\", Y.1=>\"b\" }");
     assertEquals(a1.unify(a3).toString(), "{ X.1=>Y.3, Y.1=>X.3 }");
+
+    // TODO: Check constraints unify.
   }
 }
