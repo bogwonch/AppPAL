@@ -84,27 +84,27 @@ public class Predicate extends VP implements EntityHolding
   {
     final Unification unification = new Unification();
     if (!(vp instanceof Predicate))
-      unification.fails();
+      return new Unification(false);
 
     final Predicate other = (Predicate) vp;
 
     if (!this.name.equals(other.name))
-      unification.fails();
-    else
+      return new Unification(false);
+
+    final int n = this.args.size();
+    if (n != other.args.size())
+      return new Unification(false);
+
+    for (int k = 0; k < n; k++)
     {
-      final int n = this.args.size();
-      if (n != other.args.size()) unification.fails();
-      else
-        for (int k = 0; k < n; k++)
-        {
-          final E thetaX = this.args.get(k).substitute(unification.theta);
-          final E thetaY = other.args.get(k).substitute(unification.theta);
-          Unification tau = thetaX.unify(thetaY);
-          unification.compose(tau);
-          if (unification.hasFailed())
-            return unification;
-        }
+      final E thetaX = this.args.get(k).substitute(unification.theta);
+      final E thetaY = other.args.get(k).substitute(unification.theta);
+      Unification tau = thetaX.unify(thetaY);
+      unification.compose(tau);
+      if (unification.hasFailed())
+        return unification;
     }
+
 
     return unification;
   }

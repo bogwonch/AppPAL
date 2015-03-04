@@ -23,6 +23,19 @@ public class Result
     this.proof = null;
   }
 
+  public String toString()
+  {
+    if (! this.finished)
+      return "[?|"+this.query+"]";
+    else
+    {
+      if (this.proof.isKnown())
+        return "[T|"+this.query+"]";
+      else
+        return "[F|"+this.query+"]";
+    }
+  }
+
   public Result(Assertion query, D d, Proof proof)
   {
     this.query = query;
@@ -35,7 +48,11 @@ public class Result
   public boolean needsEval() { return ! this.isFinished(); }
 
   public boolean answers(Assertion query, D d)
-  { return (this.query.equals(query) && d.isAtLeast(this.d)); }
+  {
+    if (! d.isAtLeast(this.d)) return false;
+    if (query.unify(this.query).hasFailed()) return false;
+    return true;
+  }
 
   public Proof getProof() throws NoSuchElementException
   {
@@ -54,5 +71,10 @@ public class Result
     }
     else
       throw new IllegalArgumentException("assertion is already proven");
+  }
+
+  public boolean isProven()
+  {
+    return (this.proof != null && this.proof.isKnown());
   }
 }

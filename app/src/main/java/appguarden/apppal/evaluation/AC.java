@@ -82,4 +82,9 @@ public class AC
   {
     return this.assertions;
   }
+  public Set<Constant> getConstants()
+  {
+    return this.constants;
+  }
+
 }

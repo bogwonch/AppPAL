@@ -25,6 +25,7 @@ public class Assertion implements EntityHolding, Unifiable<Assertion>
 {
   public final E speaker;
   public final Claim says;
+  private final int scope;
 
   private static int number = 0;
 
@@ -34,7 +35,16 @@ public class Assertion implements EntityHolding, Unifiable<Assertion>
     this.says = says;
 
     Assertion.number += 1;
-    this.scope(Assertion.number);
+    this.scope = Assertion.number;
+    this.scope(this.scope);
+  }
+
+  public Assertion(E speaker, Claim says, int scope)
+  {
+    this.speaker = speaker;
+    this.says = says;
+    this.scope = scope;
+    this.scope(scope);
   }
 
   public Set<Variable> vars()
@@ -148,5 +158,18 @@ public class Assertion implements EntityHolding, Unifiable<Assertion>
   {
     this.speaker.scope(scope);
     this.says.scope(scope);
+  }
+
+  public Assertion consequence()
+  { return new Assertion(this.speaker, new Claim(this.says.consequent), this.scope); }
+
+  public static Assertion makeCanActAs(E speaker, E subject, Constant c)
+  {
+    return Assertion.make(speaker, subject, new CanActAs(c));
+  }
+
+  public static Assertion make(E speaker, E c, VP object)
+  {
+    return new Assertion(speaker, new Claim(new Fact(c, object)));
   }
 }
