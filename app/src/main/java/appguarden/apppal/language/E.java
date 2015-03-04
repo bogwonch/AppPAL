@@ -65,7 +65,10 @@ public abstract class E extends CE implements EntityHolding, Unifiable<CE>
     int result = 17;
     result = result * 31 + this.name.hashCode();
     result = result * 31 + this.kind.hashCode();
-    result = result * 31 + new Integer(this.scope).hashCode();
+
+    if (this instanceof Variable)
+      result = result * 31 + new Integer(this.scope).hashCode();
+
     return result;
   }
 
@@ -79,7 +82,9 @@ public abstract class E extends CE implements EntityHolding, Unifiable<CE>
     E e = (E) other;
     if (this.kind != e.kind) return false;
     if (!this.name.equals(e.name)) return false;
-    if (this.scope != e.scope) return false;
+
+    if (this.kind == EKind.VARIABLE)
+      if (this.scope != e.scope) return false;
     return true;
   }
 

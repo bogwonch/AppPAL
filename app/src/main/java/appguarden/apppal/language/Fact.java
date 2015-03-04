@@ -26,11 +26,22 @@ public class Fact implements EntityHolding
 {
   public final E subject;
   public final VP object;
+  public E implicitSpeaker;
 
   public Fact(E subject, VP object)
   {
     this.subject = subject;
     this.object = object;
+
+    // This is secret!
+    this.implicitSpeaker = null;
+  }
+
+  public Assertion toAssertion()
+  {
+    if (this.implicitSpeaker == null)
+      throw new RuntimeException("cannot convert fact to assertion without knowing implicit speaker");
+    return new Assertion(this.implicitSpeaker, new Claim(this));
   }
 
   public String toString()

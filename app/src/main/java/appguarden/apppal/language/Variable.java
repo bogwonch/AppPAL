@@ -32,4 +32,8 @@ public class Variable extends E
     else
       throw new IOException("parsed something else when parsing a variable");
   }
+
+  // Fresh variables! Get yer secret fresh variables here!
+  private static int fresh = 0;
+  public static Variable getFresh() { return new Variable("_"+fresh++); }
 }

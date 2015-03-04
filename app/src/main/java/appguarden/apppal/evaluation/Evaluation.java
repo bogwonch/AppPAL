@@ -56,21 +56,14 @@ public class Evaluation
       return result;
     }
 
-    final Proof canSayProof = this.canSay(q, d);
-    if (canSayProof.isKnown())
+    final Proof canSayOrCanActAsProof = this.canSayOrCanActAs(q, d);
+    if (canSayOrCanActAsProof.isKnown())
     {
-      final Result result = new Result(q, d, canSayProof);
+      final Result result = new Result(q, d, canSayOrCanActAsProof);
       this.rt.update(result);
       return result;
     }
 
-    final Proof canActAsProof = this.canActAs(q, d);
-    if (canActAsProof.isKnown())
-    {
-      final Result result = new Result(q, d, canActAsProof);
-      this.rt.update(result);
-      return result;
-    }
 
     Result result = new Result(q, d, new Proof(false));
     this.rt.update(result);
@@ -79,7 +72,7 @@ public class Evaluation
 
   private Proof cond(Assertion q, D d)
   {
-    for (final Assertion a : this.ac.getAssertions())
+    for (final Assertion a : this.ac.assertions)
     {
       final Unification headU = q.unify(a.consequence());
       if (headU.hasFailed()) continue;
@@ -105,7 +98,7 @@ public class Evaluation
     // Disallow nested can-say statements
     if (q.says.consequent.object instanceof CanSay) return new Proof(false);
 
-    for (final Constant c : this.ac.getConstants())
+    for (final Constant c : this.ac.voiced)
     {
       for(final D depth : EnumSet.of(D.ZERO, D.INF))
       {
@@ -125,10 +118,9 @@ public class Evaluation
     return new Proof(false);
   }
 
-
   private Proof canActAs(Assertion q, D d)
   {
-    for (final Constant c : this.ac.getConstants())
+    for (final Constant c : this.ac.constants)
     {
       final Assertion renaming =
         Assertion.makeCanActAs(q.speaker, q.says.consequent.subject, c);
@@ -141,6 +133,61 @@ public class Evaluation
       if (! rRenamed.isProven()) continue;
 
       return new Proof(true);
+    }
+
+    return new Proof(false);
+  }
+
+  private Proof canSayOrCanActAs(Assertion q, D d)
+  {
+    for (final Constant c : this.ac.interesting)
+    {
+      // Can Act As
+      if (this.ac.subjects.contains(c))
+      {
+        if (! q.says.consequent.subject.equals(c)) // Don't care about A can-act-as A: Tautological
+        {
+          final Assertion renaming =
+            Assertion.makeCanActAs(q.speaker, q.says.consequent.subject, c);
+          final Result rRenaming = evaluate(renaming, d);
+          if (rRenaming.isProven())
+          {
+            final Assertion renamed =
+              Assertion.make(q.speaker, c, q.says.consequent.object);
+            final Result rRenamed = evaluate(renamed, d);
+            if (!rRenamed.isProven()) continue;
+
+            return new Proof(true);
+          }
+        }
+      }
+
+      // Can-say
+      if (this.ac.voiced.contains(c))
+      {
+        if (! q.speaker.equals(c)) // Don't care about A says A can-say...: Tautological
+        {
+          // Disallow this rule when delegation banned
+          if (d == D.ZERO) return new Proof(false);
+
+          //// Disallow can-say rule on nested can-say statements
+          if (q.says.consequent.object instanceof CanSay) return new Proof(false);
+
+          for (final D depth : EnumSet.of(D.ZERO, D.INF))
+          {
+            final Assertion delegator =
+              Assertion.makeCanSay(q.speaker, c, depth, q.says.consequent);
+            final Result rDelegator = evaluate(delegator, d);
+            if (rDelegator.isProven())
+            {
+              final Assertion delegation = Assertion.make(c, q.says.consequent);
+              final Result rDelegation = evaluate(delegation, depth);
+              if (rDelegation.isProven())
+                return new Proof(true);
+            }
+          }
+        }
+      }
     }
 
     return new Proof(false);

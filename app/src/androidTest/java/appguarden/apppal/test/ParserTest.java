@@ -41,9 +41,9 @@ public class ParserTest extends InstrumentationTestCase
   public void testParseConstraint() throws Exception
   {
     Assertion.resetScope();
-    String str = "X says Y isCool where equal(X, Y) = true, ! equal(Y, X) = false.";
+    String str = "\"a\" says Y isCool where equal(X, Y) = true, ! equal(Y, X) = false.";
     assertEquals(Assertion.parse(str).toString(),
-      "X.1 says Y.1 isCool where equal(X.1, Y.1) = true, ! equal(Y.1, X.1) = false."
+      "\"a\" says Y.1 isCool where equal(X.1, Y.1) = true, ! equal(Y.1, X.1) = false."
     );
   }
 }

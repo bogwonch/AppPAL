@@ -24,8 +24,13 @@ import appguarden.apppal.language.Constant;
  */
 public class AC
 {
-  private List<Assertion> assertions;
-  private Set<Constant> constants;
+  public final List<Assertion> assertions;
+  public final Set<Constant> constants;
+
+  // Types of constants
+  public final Set<Constant> voiced;
+  public final Set<Constant> subjects;
+  public final Set<Constant> interesting; // voiced U subjects
 
   /**
    * Check all assertions in the context meet the safety property.
@@ -43,9 +48,14 @@ public class AC
    */
   private void populateConstants()
   {
-    this.constants = new HashSet<>();
     for (Assertion a : this.assertions)
+    {
+      this.voiced.addAll(a.getVoiced());
+      this.subjects.addAll(a.getSubjects());
       this.constants.addAll(a.consts());
+    }
+    this.interesting.addAll(this.voiced);
+    this.interesting.addAll(this.subjects);
   }
 
   /**
@@ -74,17 +84,12 @@ public class AC
   public AC(List<Assertion> as)
   {
     this.assertions = as;
+    this.constants = new HashSet<>();
+    this.voiced = new HashSet<>();
+    this.subjects = new HashSet<>();
+    this.interesting = new HashSet<>();
+
     this.checkAssertionSafety();
     this.populateConstants();
   }
-
-  public List<Assertion> getAssertions()
-  {
-    return this.assertions;
-  }
-  public Set<Constant> getConstants()
-  {
-    return this.constants;
-  }
-
 }

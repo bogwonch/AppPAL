@@ -1,5 +1,6 @@
 package appguarden.apppal.grammar;
 
+import java.text.ParseException;
 import java.util.LinkedList;
 
 import appguarden.apppal.language.Assertion;
@@ -165,8 +166,10 @@ public class AppPALEmitter extends AppPALBaseVisitor<Object>
   public Object visitAssertion(AppPALParser.AssertionContext ctx)
   {
     E e = (E) this.visit(ctx.e());
+    if (! (e instanceof Constant))
+      throw new RuntimeException("assertion made by variable speaker: "+e);
     Claim c = (Claim) this.visit(ctx.claim());
-    return new Assertion(e, c);
+    return new Assertion((Constant) e, c);
   }
 
   /**

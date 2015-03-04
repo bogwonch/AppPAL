@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,14 +31,7 @@ public class Assertion implements EntityHolding, Unifiable<Assertion>
   private static int number = 0;
 
   public Assertion(E speaker, Claim says)
-  {
-    this.speaker = speaker;
-    this.says = says;
-
-    Assertion.number += 1;
-    this.scope = Assertion.number;
-    this.scope(this.scope);
-  }
+  { this(speaker, says, ++Assertion.number); }
 
   public Assertion(E speaker, Claim says, int scope)
   {
@@ -45,6 +39,8 @@ public class Assertion implements EntityHolding, Unifiable<Assertion>
     this.says = says;
     this.scope = scope;
     this.scope(scope);
+    for (Fact f : this.says.antecedents)
+      f.implicitSpeaker = speaker;
   }
 
   public Set<Variable> vars()
@@ -140,10 +136,37 @@ public class Assertion implements EntityHolding, Unifiable<Assertion>
   @Override
   public Assertion substitute(Map<Variable, Substitution> delta)
   {
-    final E speaker = this.speaker.substitute(delta);
     final Claim says = this.says.substitute(delta);
     return new Assertion(speaker, says);
   }
+
+  public Set<Constant> getVoiced()
+  {
+    Set<Constant> voiced = new HashSet<>();
+    if (this.speaker instanceof Constant)
+      voiced.add((Constant) this.speaker);
+
+    /* // If we never have any statements from this delegated speaker why bother to search?
+    if ((this.says.consequent.object instanceof CanSay)
+      && (this.says.consequent.subject instanceof Constant))
+      voiced.add((Constant) this.says.consequent.subject);
+    */
+    return voiced;
+  }
+
+  public Set<Constant> getSubjects()
+  {
+    Set<Constant> subjects = new HashSet<>();
+    if (this.says.consequent.subject instanceof Constant)
+      subjects.add((Constant) this.says.consequent.subject);
+
+    for (Fact f : this.says.antecedents)
+      if (f.subject instanceof Constant)
+        subjects.add((Constant) f.subject);
+
+    return subjects;
+  }
+
 
   /**
    * When writing tests it is helpful to be able to reset the global assertion counter so we know which assertions have which scopes.
