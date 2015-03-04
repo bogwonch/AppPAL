@@ -3,8 +3,11 @@ package appguarden.apppal.language;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import appguarden.apppal.evaluation.Unification;
+import appguarden.apppal.interfaces.Unifiable;
 import appguarden.apppal.language.constraint.Constraint;
 import appguarden.apppal.language.constraint.Sat;
 import appguarden.apppal.interfaces.EntityHolding;
@@ -13,7 +16,7 @@ import appguarden.apppal.interfaces.EntityHolding;
  * AppPAL claims
  * fact [ if fact,* ] [ where c ]
  */
-public class Claim implements EntityHolding
+public class Claim implements EntityHolding, Unifiable
 {
   public final Fact consequent;
   public final List<Fact> antecedents;
@@ -78,7 +81,7 @@ public class Claim implements EntityHolding
 
   public Set<Variable> vars()
   {
-    Set<Variable> vars = this.consequent.vars();
+    final Set<Variable> vars = this.consequent.vars();
     vars.addAll(this.antecedentVars());
     vars.addAll(this.constraint.vars());
     return vars;
@@ -86,7 +89,7 @@ public class Claim implements EntityHolding
 
   public Set<Constant> consts()
   {
-    Set<Constant> consts = this.consequent.consts();
+    final Set<Constant> consts = this.consequent.consts();
     consts.addAll(this.antecedentConsts());
     consts.addAll(this.constraint.consts());
     return consts;
@@ -98,7 +101,7 @@ public class Claim implements EntityHolding
    */
   public Set<Variable> antecedentVars()
   {
-    Set<Variable> vars = new HashSet<>();
+    final Set<Variable> vars = new HashSet<>();
     if (this.hasAntecedents())
       for (Fact f : this.antecedents)
         vars.addAll(f.vars());
@@ -111,11 +114,47 @@ public class Claim implements EntityHolding
    */
   public Set<Constant> antecedentConsts()
   {
-    Set<Constant> consts = new HashSet<>();
+    final Set<Constant> consts = new HashSet<>();
     if (this.hasAntecedents())
       for (Fact f : this.antecedents)
         consts.addAll(f.consts());
     return consts;
   }
 
+  public Unification unify(final Object other)
+  {
+    if (!(other instanceof Claim)) return new Unification(false);
+
+    final Claim that = (Claim) other;
+
+    final int n = this.antecedents.size();
+    if (n != that.antecedents.size()) return new Unification(false);
+
+    final Unification unification = this.consequent.unify(that.consequent);
+    for (int k = 0; k < n; k++)
+    {
+      final Fact thetaX = this.antecedents.get(k).substitute(unification.theta);
+      final Fact thetaY = that.antecedents.get(k).substitute(unification.theta);
+      final Unification tau = thetaX.unify(thetaY);
+      unification.compose(tau);
+      if (unification.hasFailed()) return unification;
+    }
+
+    final Constraint thetaX = this.constraint.substitute(unification.theta);
+    final Constraint thetaY = this.constraint.substitute(unification.theta);
+    final Unification tau = thetaX.unify(thetaY);
+    unification.compose(tau);
+
+    return unification;
+  }
+
+  public Claim substitute(Map delta)
+  {
+    final Fact consequent = this.consequent.substitute(delta);
+    final LinkedList<Fact> antecedent = new LinkedList<>();
+    for (final Fact a : antecedent)
+      antecedent.add(a.substitute(delta));
+    final Constraint constraint = this.constraint.substitute(delta);
+    return new Claim(consequent, antecedent, constraint);
+  }
 }

@@ -24,7 +24,7 @@ import appguarden.apppal.interfaces.EntityHolding;
 /**
  * AppPAL entity
  */
-public abstract class E extends CE implements EntityHolding, Unifiable<E>
+public abstract class E extends CE implements EntityHolding, Unifiable<CE>
 {
   public final String name;
   public final EKind kind;
@@ -83,7 +83,7 @@ public abstract class E extends CE implements EntityHolding, Unifiable<E>
   /**
    * @param a assertion to check safety in
    * @brief Check whether an entity is safe in an assertion
-   * <p/>
+   *
    * A variable v is safe in an Assertion of the form:
    * A says f if f_1, ..., f_n where c
    * if v is in f and v is in f_1,...f_n.
@@ -146,6 +146,12 @@ public abstract class E extends CE implements EntityHolding, Unifiable<E>
         }
     }
     return unification;
+  }
+
+  public Unification unify(CE other)
+  {
+    if (other instanceof E) return this.unify((E) other);
+    else return new Unification(false);
   }
 
   public E substitute(Map<Variable, Substitution> delta)

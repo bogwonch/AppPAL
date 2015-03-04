@@ -1,15 +1,19 @@
 package appguarden.apppal.language.constraint;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
+import appguarden.apppal.evaluation.Substitution;
+import appguarden.apppal.evaluation.Unification;
+import appguarden.apppal.interfaces.Unifiable;
 import appguarden.apppal.language.Constant;
 import appguarden.apppal.language.Variable;
 
 /**
  * Booleans are the only value we need...
  */
-public class Bool extends CE
+public class Bool extends CE implements Unifiable<CE>
 {
   public final boolean value;
   public Bool(boolean value)
@@ -28,4 +32,16 @@ public class Bool extends CE
   public Set<Variable> vars() { return new HashSet<>(); }
   public Set<Constant> consts() { return new HashSet<>(); }
 
+  @Override
+  public Unification unify(final CE with)
+  {
+    return new Unification((with instanceof Bool) &&
+                           (this.value == ((Bool) with).value));
+  }
+
+  @Override
+  public Bool substitute(Map<Variable, Substitution> delta)
+  {
+    return this;
+  }
 }

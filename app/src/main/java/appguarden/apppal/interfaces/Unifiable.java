@@ -11,6 +11,6 @@ import appguarden.apppal.language.Variable;
  */
 public interface Unifiable<T>
 {
-  abstract public Unification unify(T with);
-  abstract public T substitute(Map<Variable, Substitution> delta);
+  abstract public Unification unify(final T with);
+  abstract public T substitute(final Map<Variable, Substitution> delta);
 }

@@ -40,8 +40,6 @@ public class Unification
     this.theta.put(from, delta);
   }
 
-
-
   public void fails()
   {
     this.theta = null;

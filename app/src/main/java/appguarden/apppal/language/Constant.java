@@ -8,9 +8,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import appguarden.apppal.evaluation.Unification;
 import appguarden.apppal.grammar.AppPALEmitter;
 import appguarden.apppal.grammar.AppPALLexer;
 import appguarden.apppal.grammar.AppPALParser;
+import appguarden.apppal.language.constraint.CE;
 
 /**
  * Constant Entity

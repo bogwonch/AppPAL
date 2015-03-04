@@ -73,9 +73,4 @@ public class PrintingTest extends InstrumentationTestCase
     final Fact fact = new Fact(bob, predNoArgs);
     assertEquals(fact.toString(), "Bob isCool");
   }
-
-  public void testPrintClaim() throws Exception
-  {
-    // TODO
-  }
 }

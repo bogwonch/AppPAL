@@ -7,8 +7,10 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 import java.util.Set;
 
+import appguarden.apppal.evaluation.Substitution;
 import appguarden.apppal.evaluation.Unification;
 import appguarden.apppal.grammar.AppPALEmitter;
 import appguarden.apppal.grammar.AppPALLexer;
@@ -19,7 +21,7 @@ import appguarden.apppal.interfaces.Unifiable;
 /**
  * SecPAL Assertion
  */
-public class Assertion implements EntityHolding
+public class Assertion implements EntityHolding, Unifiable<Assertion>
 {
   public final E speaker;
   public final Claim says;
@@ -105,5 +107,26 @@ public class Assertion implements EntityHolding
         if (! f.isFlat()) { return false; }
 
     return true;
+  }
+
+  @Override
+  public Unification unify(Assertion that)
+  {
+    final Unification unification = this.speaker.unify(that.speaker);
+    if (! unification.hasFailed())
+    {
+      Claim thetaX = this.says.substitute(unification.theta);
+      Claim thetaY = that.says.substitute(unification.theta);
+      unification.compose(thetaX.unify(thetaY));
+    }
+    return unification;
+  }
+
+  @Override
+  public Assertion substitute(Map<Variable, Substitution> delta)
+  {
+    final E speaker = this.speaker.substitute(delta);
+    final Claim says = this.says.substitute(delta);
+    return new Assertion(speaker, says);
   }
 }
