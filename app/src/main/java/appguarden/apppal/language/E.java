@@ -28,11 +28,13 @@ public abstract class E extends CE implements EntityHolding, Unifiable<CE>
 {
   public final String name;
   public final EKind kind;
+  protected int scope; // Unscoped
 
   public E(String name, EKind kind)
   {
     this.name = name;
     this.kind = kind;
+    this.scope = 0; // No scope by default
   }
 
   public abstract String toString();
@@ -63,6 +65,7 @@ public abstract class E extends CE implements EntityHolding, Unifiable<CE>
     int result = 17;
     result = result * 31 + this.name.hashCode();
     result = result * 31 + this.kind.hashCode();
+    result = result * 31 + new Integer(this.scope).hashCode();
     return result;
   }
 
@@ -76,6 +79,7 @@ public abstract class E extends CE implements EntityHolding, Unifiable<CE>
     E e = (E) other;
     if (this.kind != e.kind) return false;
     if (!this.name.equals(e.name)) return false;
+    if (this.scope != e.scope) return false;
     return true;
   }
 
@@ -164,4 +168,7 @@ public abstract class E extends CE implements EntityHolding, Unifiable<CE>
     }
     return this;
   }
+
+  @Override
+  public void scope(int scope) { this.scope = scope; }
 }

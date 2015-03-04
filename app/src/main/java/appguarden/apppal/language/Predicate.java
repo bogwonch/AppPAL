@@ -67,6 +67,10 @@ public class Predicate extends VP implements EntityHolding
     return vars;
   }
 
+  @Override
+  public void scope(int scope)
+  { for (E e : this.args) e.scope(scope); }
+
   public Set<Constant> consts()
   {
     final Set<Constant> consts = new HashSet<>();

@@ -53,4 +53,9 @@ public class CanActAs extends VP implements EntityHolding
     }
     return unification;
   }
+
+  public void scope(int scope)
+  {
+    this.renaming.scope(scope);
+  }
 }

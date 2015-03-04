@@ -95,4 +95,10 @@ public class Fact implements EntityHolding
     AppPALEmitter emitter = new AppPALEmitter();
     return (Fact) emitter.visit(tree);
   }
+
+  public void scope(int scope)
+  {
+    this.subject.scope(scope);
+    this.object.scope(scope);
+  }
 }

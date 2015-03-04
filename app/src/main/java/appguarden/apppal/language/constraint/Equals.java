@@ -55,4 +55,11 @@ public class Equals extends Constraint implements Unifiable<Constraint>
   @Override
   public Constraint substitute(Map<Variable, Substitution> delta)
   { return new Equals(this.lhs.substitute(delta), this.rhs.substitute(delta)); }
+
+  @Override
+  public void scope(int scope)
+  {
+    this.lhs.scope(scope);
+    this.rhs.scope(scope);
+  }
 }

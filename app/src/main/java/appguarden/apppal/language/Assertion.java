@@ -26,10 +26,15 @@ public class Assertion implements EntityHolding, Unifiable<Assertion>
   public final E speaker;
   public final Claim says;
 
+  private static int number = 0;
+
   public Assertion(E speaker, Claim says)
   {
     this.speaker = speaker;
     this.says = says;
+
+    Assertion.number += 1;
+    this.scope(Assertion.number);
   }
 
   public Set<Variable> vars()
@@ -128,5 +133,20 @@ public class Assertion implements EntityHolding, Unifiable<Assertion>
     final E speaker = this.speaker.substitute(delta);
     final Claim says = this.says.substitute(delta);
     return new Assertion(speaker, says);
+  }
+
+  /**
+   * When writing tests it is helpful to be able to reset the global assertion counter so we know which assertions have which scopes.
+   * THIS SHOULD NEVER BE CALLED IN THE REAL WORLD.
+   */
+  public static void resetScope()
+  {
+    Assertion.number = 0;
+  }
+
+  private void scope(int scope)
+  {
+    this.speaker.scope(scope);
+    this.says.scope(scope);
   }
 }

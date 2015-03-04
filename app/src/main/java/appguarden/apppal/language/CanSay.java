@@ -48,8 +48,9 @@ public class CanSay extends VP implements EntityHolding
   }
 
   public CanSay substitute(Map<Variable, Substitution> delta)
-  {
-    return new CanSay(this.d, this.fact.substitute(delta));
-  }
+  { return new CanSay(this.d, this.fact.substitute(delta)); }
+
+  public void scope(int scope)
+  { this.fact.scope(scope); }
 }
 

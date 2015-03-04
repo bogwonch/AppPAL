@@ -157,4 +157,11 @@ public class Claim implements EntityHolding, Unifiable
     final Constraint constraint = this.constraint.substitute(delta);
     return new Claim(consequent, antecedent, constraint);
   }
+
+  public void scope(int scope)
+  {
+    this.consequent.scope(scope);
+    for (Fact f : this.antecedents) f.scope(scope);
+    this.constraint.scope(scope);
+  }
 }

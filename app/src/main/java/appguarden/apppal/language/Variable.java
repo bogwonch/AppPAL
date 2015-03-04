@@ -17,7 +17,11 @@ public class Variable extends E
 
   public String toString()
   {
-    return this.name;
+    // For test purposes if something isn't part of an assertion don't show it.
+    if (this.scope > 0)
+      return this.name+"."+this.scope;
+    else
+      return this.name;
   }
 
   public static Variable parse(String str) throws IOException

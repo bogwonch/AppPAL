@@ -84,4 +84,7 @@ public class Function extends CE implements Unifiable<CE>
       args.add(arg.substitute(delta));
     return new Function(this.name, args);
   }
+
+  public void scope(int scope)
+  { for (CE e : this.args) e.scope(scope); }
 }

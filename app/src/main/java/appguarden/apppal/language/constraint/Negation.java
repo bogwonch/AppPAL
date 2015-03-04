@@ -34,4 +34,8 @@ public class Negation extends Constraint implements Unifiable<Constraint>
   @Override
   public Constraint substitute(final Map<Variable, Substitution> delta)
   { return new Negation(this.value.substitute(delta)); }
+
+  @Override
+  public void scope(int scope)
+  { this.value.scope(scope); }
 }

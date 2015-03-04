@@ -56,4 +56,12 @@ public class Conj extends Constraint implements Unifiable<Constraint>
   {
     return new Conj(this.lhs.substitute(delta), this.rhs.substitute(delta));
   }
+
+  @Override
+  public void scope(int scope)
+  {
+    this.lhs.scope(scope);
+    this.rhs.scope(scope);
+  }
+
 }

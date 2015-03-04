@@ -4,6 +4,7 @@ import android.test.InstrumentationTestCase;
 
 import java.io.IOException;
 
+import appguarden.apppal.language.Assertion;
 import appguarden.apppal.language.E;
 import appguarden.apppal.language.Fact;
 
@@ -34,15 +35,15 @@ public class EvaluationTest extends InstrumentationTestCase
     final Fact f3 = Fact.parse("X likes(\"a\", \"b\", \"c\"");
     final Fact f4 = Fact.parse("X likes(\"a\", \"b\")");
 
-    assertEquals(f1.unify(f2).toString(), "{ X=>\"a\", Y=>\"b\" }");
-    assertEquals(f2.unify(f1).toString(), "{ X=>\"a\", Y=>\"b\" }");
+    assertEquals(f1.unify(f2).toString(), "{ Y=>\"b\", X=>\"a\" }");
+    assertEquals(f2.unify(f1).toString(), "{ Y=>\"b\", X=>\"a\" }");
     assertEquals(f1.unify(f3).hasFailed(), true);
     assertEquals(f1.unify(f4).hasFailed(), true);
 
     final Fact f5 = Fact.parse("\"a\" can-act-as \"a\"");
     final Fact f6 = Fact.parse("X can-act-as Y");
 
-    assertEquals(f5.unify(f6).toString(), "{ X=>\"a\", Y=>\"a\" }");
+    assertEquals(f5.unify(f6).toString(), "{ Y=>\"a\", X=>\"a\" }");
     assertEquals(f5.unify(f1).hasFailed(), true);
 
     final Fact f7 = Fact.parse("X can-say 0 Y likes(X)");
@@ -50,9 +51,24 @@ public class EvaluationTest extends InstrumentationTestCase
     final Fact f9 = Fact.parse("\"a\" can-say inf \"b\" likes(\"a\")");
     final Fact fA = Fact.parse("\"a\" can-say 0 \"b\" likes(\"b\")");
 
-    assertEquals(f7.unify(f8).toString(), "{ X=>\"a\", Y=>\"b\" }");
+    assertEquals(f7.unify(f8).toString(), "{ Y=>\"b\", X=>\"a\" }");
     assertEquals(f7.unify(f7).toString(), "{}");
     assertEquals(f7.unify(f9).hasFailed(), true);
     assertEquals(f7.unify(fA).hasFailed(), true);
+
+    final Fact fB = Fact.parse("Z likes(Y,X,Y).");
+    fB.scope(1);
+    assertEquals(f1.unify(fB).toString(), "{ Z.1=>\"a\", Y=>X.1, X=>Y.1 }");
+  }
+
+  public void testUnificationAssertion() throws Exception
+  {
+    Assertion.resetScope();
+    final Assertion a1 = Assertion.parse("X says Y exists.");
+    final Assertion a2 = Assertion.parse("\"a\" says \"b\" exists.");
+    final Assertion a3 = Assertion.parse("Y says X exists.");
+
+    assertEquals(a1.unify(a2).toString(), "{ X.1=>\"a\", Y.1=>\"b\" }");
+    assertEquals(a1.unify(a3).toString(), "{ X.1=>Y.3, Y.1=>X.3 }");
   }
 }

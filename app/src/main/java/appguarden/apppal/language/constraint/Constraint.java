@@ -16,5 +16,7 @@ abstract public class Constraint implements EntityHolding, Unifiable<Constraint>
   {
     return false;
   }
+  public void scope(int scope){}
   public abstract String toString();
+
 }

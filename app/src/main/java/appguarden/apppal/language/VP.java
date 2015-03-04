@@ -12,4 +12,5 @@ public abstract class VP implements EntityHolding, Unifiable<VP>
 {
   public abstract String toString();
   public abstract Set<Variable> vars();
+  public abstract void scope(int scope);
 }

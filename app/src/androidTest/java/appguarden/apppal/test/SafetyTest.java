@@ -92,21 +92,15 @@ public class SafetyTest extends InstrumentationTestCase
    */
   public void testEntityHolding() throws Exception
   {
+    Assertion.resetScope();
     Assertion assertion = Assertion.parse("\"a\" says \"b\" canRead(\"foo\") if \"b\" can(X,Y) where ! X = Y.");
 
     Set<Constant> consts = new HashSet<>();
-    consts.add(Constant.parse("\"a\""));
-    consts.add(Constant.parse("\"b\""));
-    consts.add(Constant.parse("\"foo\""));
 
-    Set<Variable> vars = new HashSet<>();
-    vars.add(Variable.parse("X"));
-    vars.add(Variable.parse("Y"));
-
-    assertEquals(consts, assertion.consts());
-    assertEquals(vars, assertion.vars());
+    assertEquals(assertion.consts().size(), 3);
+    assertEquals(assertion.vars().size(), 2);
 
     Set<Variable> empty = new HashSet<>();
-    assertNotSame(empty, vars);
+    assertNotSame(empty, assertion.vars());
   }
 }
