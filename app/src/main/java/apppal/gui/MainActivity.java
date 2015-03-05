@@ -1,4 +1,4 @@
-package apppal.logic.gui;
+package apppal.gui;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
