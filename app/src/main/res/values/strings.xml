@@ -4,4 +4,25 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="buttonLabelCheck">Check</string>
+    <string name="labelQuery">Query:</string>
+    <string name="labelAC">Assertion Context:</string>
+    <string name="defaultAC">
+        \"user\" says App isInstallable\n
+        \n\tif App isGood.\n
+        \n
+        \"user\" says X can-say 0 App isGood\n
+        \n\tif X isFriend.\n
+        \n
+        \"user\" says \"alice\" isFriend.\n
+        \n
+        \"alice\" says \"com.rovio.angrybirds\" isGood.\n
+        \"alice\" says \"bob\" can-say 0 App isGood.\n
+        \"alice\" says \"bob\" isFriend.\n
+        \n
+        \"bob\" says \"com.facebook\" isGood.\n
+        \n
+        \"malory\" says \"com.flashlight\" isGood.
+    </string>
+    <string name="defaultQuery">\"user\" says \"com.rovio.angrybirds\" isInstallable.</string>
 </resources>
