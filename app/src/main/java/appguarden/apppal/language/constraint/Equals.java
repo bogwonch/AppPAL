@@ -57,6 +57,12 @@ public class Equals extends Constraint implements Unifiable<Constraint>
   { return new Equals(this.lhs.substitute(delta), this.rhs.substitute(delta)); }
 
   @Override
+  public boolean isTrue()
+  {
+    return lhs.eval().equals(rhs.eval());
+  }
+
+  @Override
   public void scope(int scope)
   {
     this.lhs.scope(scope);

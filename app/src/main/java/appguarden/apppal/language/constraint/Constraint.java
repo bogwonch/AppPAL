@@ -12,11 +12,11 @@ import appguarden.apppal.language.Variable;
  */
 abstract public class Constraint implements EntityHolding, Unifiable<Constraint>
 {
+  public abstract boolean isTrue();
   public boolean isTriviallyTrue()
   {
     return false;
   }
   public void scope(int scope){}
   public abstract String toString();
-
 }

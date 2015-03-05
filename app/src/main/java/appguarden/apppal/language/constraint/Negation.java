@@ -36,6 +36,12 @@ public class Negation extends Constraint implements Unifiable<Constraint>
   { return new Negation(this.value.substitute(delta)); }
 
   @Override
+  public boolean isTrue()
+  {
+    return ! this.value.isTrue();
+  }
+
+  @Override
   public void scope(int scope)
   { this.value.scope(scope); }
 }

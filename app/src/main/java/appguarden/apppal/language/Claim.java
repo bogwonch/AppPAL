@@ -152,7 +152,7 @@ public class Claim implements EntityHolding, Unifiable
   {
     final Fact consequent = this.consequent.substitute(delta);
     final LinkedList<Fact> antecedent = new LinkedList<>();
-    for (final Fact a : antecedent)
+    for (final Fact a : this.antecedents)
       antecedent.add(a.substitute(delta));
     final Constraint constraint = this.constraint.substitute(delta);
     return new Claim(consequent, antecedent, constraint);

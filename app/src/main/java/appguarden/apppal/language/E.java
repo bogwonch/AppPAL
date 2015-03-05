@@ -88,7 +88,6 @@ public abstract class E extends CE implements EntityHolding, Unifiable<CE>
     return true;
   }
 
-
   /**
    * @param a assertion to check safety in
    * @brief Check whether an entity is safe in an assertion
@@ -176,4 +175,7 @@ public abstract class E extends CE implements EntityHolding, Unifiable<CE>
 
   @Override
   public void scope(int scope) { this.scope = scope; }
+
+  @Override
+  public CE eval() { return this; }
 }

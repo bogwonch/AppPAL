@@ -1,11 +1,16 @@
 package appguarden.apppal.evaluation;
 
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import appguarden.apppal.language.Assertion;
 import appguarden.apppal.language.CanSay;
 import appguarden.apppal.language.Constant;
 import appguarden.apppal.language.D;
+import appguarden.apppal.language.Fact;
+import appguarden.apppal.language.Variable;
 
 /**
  * Class for doing the actual evaluation
@@ -79,14 +84,52 @@ public class Evaluation
 
       final Assertion thetaA = a.substitute(headU.theta);
 
-      // Condition three
+      // Condition three: no vars of the consequent fact must be gone after unification
       if (thetaA.says.consequent.vars().size() != 0)
         continue;
 
-      // TODO: Evaluate the antecedents and constraint.
+      // Condition one: all antecedents must be satisfied
+      // Condition three: constraint must be sat
+      if (! this.checkAntecedents(thetaA, d).isKnown())
+        continue;
+
       return new Proof(true);
     }
 
+    return new Proof(false);
+  }
+
+  private Proof checkAntecedents(Assertion a, D d)
+  {
+    if (a.says.antecedents.size() == 0 &&
+        a.says.constraint.isTriviallyTrue())
+      return new Proof(true);
+    if (a.vars().size() == 0) return this.checkAntecedentsNoVars(a, d);
+    else return this.checkAntecedentWithVars(a, d);
+  }
+
+  private Proof checkAntecedentsNoVars(Assertion a, D d)
+  {
+    if (a.vars().size() != 0) throw new RuntimeException("vars in antecedent when none claimed");
+    for (final Fact f : a.says.antecedents)
+    {
+      final Result r = evaluate(f.toAssertion(), d);
+      if (! r.isProven()) return new Proof(false);
+    }
+
+    // Check the constraint
+    return new Proof(a.says.constraint.isTrue());
+  }
+
+  private Proof checkAntecedentWithVars(Assertion a, D d)
+  {
+    SubstituteAll subs = new SubstituteAll(a.vars(), this.ac.constants);
+    for (Map<Variable, Substitution> theta : subs)
+    {
+      Assertion thetaA = a.substitute(theta);
+      if (this.checkAntecedentsNoVars(thetaA, d).isKnown())
+        return new Proof(true);
+    }
     return new Proof(false);
   }
 

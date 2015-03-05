@@ -8,6 +8,7 @@ import appguarden.apppal.evaluation.Substitution;
 import appguarden.apppal.evaluation.Unification;
 import appguarden.apppal.interfaces.Unifiable;
 import appguarden.apppal.language.Constant;
+import appguarden.apppal.language.EKind;
 import appguarden.apppal.language.Variable;
 
 /**
@@ -30,6 +31,13 @@ public class Bool extends CE implements Unifiable<CE>
   }
 
   public Set<Variable> vars() { return new HashSet<>(); }
+
+  @Override
+  public CE eval()
+  {
+    return this;
+  }
+
   public Set<Constant> consts() { return new HashSet<>(); }
 
   @Override
@@ -43,5 +51,20 @@ public class Bool extends CE implements Unifiable<CE>
   public Bool substitute(Map<Variable, Substitution> delta)
   {
     return this;
+  }
+
+  @Override
+  public int hashCode()
+  { return (this.value)? 1 : 0; }
+
+  @Override
+  public boolean equals(Object other)
+  {
+    if (!(other instanceof Bool))
+    {
+      return false;
+    }
+    Bool b = (Bool) other;
+    return this.value == b.value;
   }
 }

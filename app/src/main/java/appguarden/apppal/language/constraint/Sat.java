@@ -26,6 +26,9 @@ public class Sat extends Constraint implements Unifiable<Constraint>
   public Set<Variable> vars() { return new HashSet<>(); }
   public Set<Constant> consts() { return new HashSet<>(); }
 
+  @Override
+  public boolean isTrue()
+  { return true; }
 
   @Override
   public boolean isTriviallyTrue() { return true; }

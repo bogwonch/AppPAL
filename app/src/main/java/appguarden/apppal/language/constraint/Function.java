@@ -8,10 +8,12 @@ import java.util.Set;
 
 import appguarden.apppal.evaluation.Substitution;
 import appguarden.apppal.evaluation.Unification;
+import appguarden.apppal.interfaces.ConstraintFunction;
 import appguarden.apppal.interfaces.Unifiable;
 import appguarden.apppal.language.Constant;
 import appguarden.apppal.language.E;
 import appguarden.apppal.language.Variable;
+import appguarden.apppal.language.constraint.functions.HasPermission;
 
 /**
  * Constraint Function
@@ -87,4 +89,31 @@ public class Function extends CE implements Unifiable<CE>
 
   public void scope(int scope)
   { for (CE e : this.args) e.scope(scope); }
+
+  /**
+   * Evaluates a function by calling the correct evaluation function
+   * @return
+   */
+  @Override
+  public CE eval() throws IllegalArgumentException
+  {
+    final ConstraintFunction f;
+    switch (this.name)
+    {
+      case "hasPermission":
+        f = new HasPermission();
+        break;
+
+      default:
+        throw new IllegalArgumentException("cannot evaluate unknown function: "+this.name);
+    }
+
+    if (this.args.size() != f.arity())
+      throw new IllegalArgumentException(
+        "function "+this.name+
+        " should have arity "+f.arity()+
+        " but found "+this.args.size()+" arguments.");
+
+    return f.eval(this.args);
+  }
 }

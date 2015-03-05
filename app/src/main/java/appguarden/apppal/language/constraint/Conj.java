@@ -58,6 +58,10 @@ public class Conj extends Constraint implements Unifiable<Constraint>
   }
 
   @Override
+  public boolean isTrue()
+  { return this.lhs.isTrue() && this.rhs.isTrue(); }
+
+  @Override
   public void scope(int scope)
   {
     this.lhs.scope(scope);

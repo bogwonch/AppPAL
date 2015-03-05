@@ -14,4 +14,5 @@ abstract public class CE implements EntityHolding, Unifiable<CE>
   public abstract String toString();
   public abstract Set<Variable> vars();
   public void scope(int scope) {}
+  public abstract CE eval();
 }
