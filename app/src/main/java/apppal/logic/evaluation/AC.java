@@ -8,6 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -89,6 +90,25 @@ public class AC
     this.interesting = new HashSet<>();
 
     this.checkAssertionSafety();
+    this.populateConstants();
+  }
+
+  public AC()
+  {
+    this.assertions = new LinkedList<>();
+    this.constants = new HashSet<>();
+    this.voiced = new HashSet<>();
+    this.subjects = new HashSet<>();
+    this.interesting = new HashSet<>();
+  }
+
+  /**
+   * Merge two assertion contexts into one mega-assertion context.
+   * @param other the context to merge
+   */
+  public void merge(AC other)
+  {
+    this.assertions.addAll(other.assertions);
     this.populateConstants();
   }
 }
