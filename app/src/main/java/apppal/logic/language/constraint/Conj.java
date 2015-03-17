@@ -25,6 +25,13 @@ public class Conj extends Constraint implements Unifiable<Constraint>
   }
 
   public String toString() { return this.lhs +", "+this.rhs; }
+
+  @Override
+  public boolean hasFailed()
+  {
+    return this.lhs.hasFailed() || this.rhs.hasFailed();
+  }
+
   public Set<Variable> vars()
   {
     final Set<Variable> vars = this.lhs.vars();
@@ -59,7 +66,10 @@ public class Conj extends Constraint implements Unifiable<Constraint>
 
   @Override
   public boolean isTrue()
-  { return this.lhs.isTrue() && this.rhs.isTrue(); }
+  {
+    if (this.hasFailed()) return false;
+    return this.lhs.isTrue() && this.rhs.isTrue();
+  }
 
   @Override
   public void scope(int scope)

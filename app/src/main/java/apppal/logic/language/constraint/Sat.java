@@ -23,6 +23,11 @@ public class Sat extends Constraint implements Unifiable<Constraint>
   {
     return "sat";
   }
+
+  @Override
+  public boolean hasFailed()
+  { return false; }
+
   public Set<Variable> vars() { return new HashSet<>(); }
   public Set<Constant> consts() { return new HashSet<>(); }
 

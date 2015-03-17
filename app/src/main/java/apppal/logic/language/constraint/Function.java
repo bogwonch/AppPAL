@@ -12,7 +12,8 @@ import apppal.logic.interfaces.ConstraintFunction;
 import apppal.logic.interfaces.Unifiable;
 import apppal.logic.language.Constant;
 import apppal.logic.language.Variable;
-import apppal.logic.language.constraint.functions.HasPermission;
+import apppal.logic.language.constraint.functions.*;
+import apppal.logic.language.constraint.functions.Failure;
 
 /**
  * Constraint Function
@@ -101,6 +102,10 @@ public class Function extends CE implements Unifiable<CE>
     {
       case "hasPermission":
         f = new HasPermission();
+        break;
+
+      case "failure":
+        f = new Failure();
         break;
 
       default:

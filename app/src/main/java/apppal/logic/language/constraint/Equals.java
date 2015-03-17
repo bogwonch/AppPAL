@@ -26,6 +26,12 @@ public class Equals extends Constraint implements Unifiable<Constraint>
 
   public String toString() { return this.lhs+" = "+this.rhs; }
 
+  @Override
+  public boolean hasFailed()
+  {
+    return (this.lhs instanceof Fail) || (this.rhs instanceof Fail);
+  }
+
   public Set<Variable> vars()
   {
     Set<Variable> vars = this.lhs.vars();
@@ -59,6 +65,7 @@ public class Equals extends Constraint implements Unifiable<Constraint>
   @Override
   public boolean isTrue()
   {
+    if (this.hasFailed()) return false;
     return lhs.eval().equals(rhs.eval());
   }
 

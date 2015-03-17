@@ -2,6 +2,8 @@ package apppal.logic.test;
 
 import android.test.InstrumentationTestCase;
 
+import junit.framework.Assert;
+
 import apppal.logic.evaluation.AC;
 import apppal.logic.evaluation.Evaluation;
 import apppal.logic.language.Assertion;
@@ -248,5 +250,14 @@ public class EvaluationTest extends InstrumentationTestCase
 
     assertEquals(Evaluation.shows(ac, q0), false);
     assertEquals(Evaluation.shows(ac, q1), true);
+  }
+
+  public void testFailure() throws Exception
+  {
+    AC ac = new AC
+      ( "\"a\" says \"a\" nope where failure() = failure()." );
+    Assertion q = Assertion.parse("\"a\" says \"a\" nope.");
+
+    assertEquals(Evaluation.shows(ac, q), false);
   }
 }

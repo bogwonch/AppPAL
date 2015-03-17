@@ -21,6 +21,13 @@ public class Negation extends Constraint implements Unifiable<Constraint>
     this.value = c;
   }
   public String toString() { return "! "+this.value; }
+
+  @Override
+  public boolean hasFailed()
+  {
+    return this.value.hasFailed();
+  }
+
   public Set<Variable> vars() { return this.value.vars(); }
   public Set<Constant> consts() { return this.value.consts(); }
 
@@ -38,7 +45,8 @@ public class Negation extends Constraint implements Unifiable<Constraint>
   @Override
   public boolean isTrue()
   {
-    return ! this.value.isTrue();
+    if (this.value.hasFailed()) return false;
+    else return ! this.value.isTrue();
   }
 
   @Override
